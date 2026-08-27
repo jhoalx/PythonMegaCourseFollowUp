@@ -1,4 +1,4 @@
-user_prompt = "Please enter a To-do: "
+user_prompt = 'Please enter a To-do: '
 
 todo1 = input(user_prompt)
 todo2 = input(user_prompt)
