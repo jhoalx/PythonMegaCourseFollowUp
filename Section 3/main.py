@@ -14,5 +14,8 @@ while True:
                 print(item)
         case "exit":
             break
+        case _:
+            print("Invalid Command")
+
 
 print("Bye!")
