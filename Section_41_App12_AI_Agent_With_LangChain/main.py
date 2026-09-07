@@ -3,8 +3,8 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 from langchain.agents import create_agent
-from langchain_classic.chains.question_answering.map_reduce_prompt import messages
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv(verbose=True)
 
@@ -16,10 +16,16 @@ def get_date():
     return datetime.now().strftime("%Y-%m-%d")
 
 
-llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash-lite")
+# llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash-lite")
+
+llm = ChatOpenAI(
+    base_url="http://localhost:1234/v1",
+    openai_api_key="none"
+)
+
 system_prompt = """
 You are a helpful Assistant.
-use yhe get_date tool if the uer is asking about the today's date
+use the get_date tool if the uer is asking about the today's date
 """
 
 agent = create_agent(
@@ -42,6 +48,7 @@ response = agent.invoke({
 })
 
 all_messages = response["messages"]
-ai_answer = all_messages[-1].content[0]['text']
+#ai_answer = all_messages[-1].content[0]['text']
+ai_answer = all_messages[-1].content
 
 print("AI Answer:", ai_answer)

@@ -2,7 +2,7 @@ langchain
 google-genai
 langchain-google-genai
 ollama
-langchain-ollama
+langchain-openai
 langchain-community
 gradio
 langgraph
