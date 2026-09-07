@@ -1,4 +1,5 @@
 import os
+import gradio as gr
 
 from dotenv import load_dotenv
 from datetime import datetime
@@ -36,19 +37,28 @@ agent = create_agent(
     ]
 )
 
-user_query = input("Enter a Query: ")
+# user_query = input("Enter a Query: ")
 
-response = agent.invoke({
-    "messages": [
-        {
-            "role": "user",
-            "content": user_query
-        }
-    ]
-})
+# print("AI Answer:", ai_answer)
 
-all_messages = response["messages"]
-#ai_answer = all_messages[-1].content[0]['text']
-ai_answer = all_messages[-1].content
+def chat(message, history):
+    response = agent.invoke({
+        "messages": [
+            {
+                "role": "user",
+                "content": message
+            }
+        ]
+    })
 
-print("AI Answer:", ai_answer)
+    all_messages = response["messages"]
+    # ai_answer = all_messages[-1].content[0]['text']
+    ai_answer = all_messages[-1].content
+    return ai_answer
+
+
+with gr.Blocks() as demo:
+    gr.Markdown("# AI Agent")
+    gr.ChatInterface(fn=chat)
+
+demo.launch()
