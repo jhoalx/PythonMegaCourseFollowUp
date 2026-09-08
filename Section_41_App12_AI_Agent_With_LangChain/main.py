@@ -11,16 +11,20 @@ from langchain_openai import ChatOpenAI
 # from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.sqlite import SqliteSaver
 import sqlite3
+from langchain_tavily import TavilySearch
 
 load_dotenv(verbose=True)
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 
 
 def get_date():
     """Get the current date"""
     return datetime.now().strftime("%Y-%m-%d")
 
+
+search_tool = TavilySearch()
 
 conn = sqlite3.connect("agent_memory.sqlite", check_same_thread=False)
 checkpointer = SqliteSaver(conn)
@@ -34,7 +38,9 @@ llm = ChatOpenAI(
 
 system_prompt = """
 You are a helpful Assistant.
-use the get_date tool if the uer is asking about the today's date
+answer all user queries.
+use the get_date tool only when the user is explicitly asking about the today's date.
+use search_tool for answering questions that require up to date information.
 """
 
 agent = create_agent(
@@ -42,7 +48,8 @@ agent = create_agent(
     system_prompt=system_prompt,
     checkpointer=checkpointer,
     tools=[
-        get_date
+        get_date,
+        search_tool
     ]
 )
 
